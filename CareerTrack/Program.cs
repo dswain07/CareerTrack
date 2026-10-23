@@ -22,6 +22,7 @@ namespace CareerTrack
             {
                 var context = scope.ServiceProvider.GetRequiredService<CareerTrackDbContext>();
 
+                // Seed initial database records if the database is empty.
                 DbSeeder.SeedAsync(context).GetAwaiter().GetResult();
             }
 

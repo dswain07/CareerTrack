@@ -29,6 +29,6 @@ namespace CareerTrack.Data.Models
         public int JobApplicationId { get; set; }
 
         // Navigation property
-        public JobApplication JobApplication { get; set; } = null;
+        public JobApplication? JobApplication { get; set; } 
     }
 }

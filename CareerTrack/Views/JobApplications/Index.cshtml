@@ -1,0 +1,167 @@
+@model IEnumerable<CareerTrack.Data.Models.JobApplication>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<form asp-action="Index" method="get" class="row g-3 mb-4" id="searchForm">
+
+    <div class="col-md-4">
+        <label for="jobTitle" class="form-label">Job Title</label>
+        <input type="text"
+               id="jobTitle"
+               name="jobTitle"
+               value="@ViewData["JobTitleSearch"]"
+               class="form-control"
+               placeholder="Search by job title" />
+    </div>
+
+    <div class="col-md-4">
+        <label for="location" class="form-label">Location</label>
+        <input type="text"
+               id="location"
+               name="location"
+               value="@ViewData["LocationSearch"]"
+               class="form-control"
+               placeholder="Search by location" />
+    </div>
+
+    <div class="col-md-4 d-flex align-items-end gap-2">
+        <button type="submit" class="btn btn-primary">
+            Search
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Clear
+        </a>
+    </div>
+
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.JobTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateApplied)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JobUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Salary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Notes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Company)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationStatus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateApplied)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Salary)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Notes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Company.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApplicationStatus.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const searchForm = document.getElementById("searchForm");
+            const jobTitleInput = document.getElementById("jobTitle");
+            const locationInput = document.getElementById("location");
+
+            let searchTimeout;
+
+            // Restore focus after page reload
+            const lastFocusedField = sessionStorage.getItem("lastFocusedField");
+            const cursorPosition = sessionStorage.getItem("cursorPosition");
+
+            if (lastFocusedField) {
+                const input = document.getElementById(lastFocusedField);
+
+                if (input) {
+                    input.focus();
+
+                    if (cursorPosition !== null) {
+                        input.setSelectionRange(
+                            Number(cursorPosition),
+                            Number(cursorPosition)
+                        );
+                    }
+                }
+
+                sessionStorage.removeItem("lastFocusedField");
+                sessionStorage.removeItem("cursorPosition");
+            }
+
+            function performSearch(event) {
+                clearTimeout(searchTimeout);
+
+                const input = event.target;
+
+                searchTimeout = setTimeout(function () {
+
+                    // Remember textbox and cursor position
+                    sessionStorage.setItem("lastFocusedField", input.id);
+                    sessionStorage.setItem("cursorPosition", input.selectionStart);
+
+                    searchForm.requestSubmit();
+
+                }, 400);
+            }
+
+            jobTitleInput.addEventListener("input", performSearch);
+            locationInput.addEventListener("input", performSearch);
+
+        });
+    </script>
+}

@@ -1,0 +1,70 @@
+﻿
+@model IEnumerable<CareerTrack.Data.Models.ApplicationStatus>
+
+@{
+    ViewData["Title"] = "Administration";
+}
+
+<h1>Administration</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<p class="text-muted">
+    Manage application statuses used throughout CareerTrack.
+</p>
+
+<h2>Application Statuses</h2>
+
+<p>
+    <a asp-controller="Admin"
+       asp-action="Create"
+       class="btn btn-primary">
+        Create New Status
+    </a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Status Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var status in Model)
+        {
+            <tr>
+                <td>@status.Name</td>
+                <td>@status.Description</td>
+                <td>
+                    <a asp-controller="Admin"
+                       asp-action="Edit"
+                       asp-route-id="@status.Id"
+                       class="btn btn-sm btn-warning">
+                        Edit
+                    </a>
+
+                    <a asp-controller="Admin"
+                       asp-action="Delete"
+                       asp-route-id="@status.Id"
+                       class="btn btn-sm btn-danger">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

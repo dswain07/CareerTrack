@@ -31,13 +31,13 @@ namespace CareerTrack.Data.Models
         [Required]
         public int CompanyId { get; set; }
 
-        public Company Company { get; set; } = null;
+        public Company? Company { get; set; }  
 
         // Relationship with ApplicationStatus
         [Required]
         public int ApplicationStatusId { get; set; }
 
-        public ApplicationStatus ApplicationStatus { get; set; } = null;
+        public ApplicationStatus? ApplicationStatus { get; set; } 
 
         // One application can have multiple interviews
         public ICollection<Interview> Interviews { get; set; } = new List<Interview>();

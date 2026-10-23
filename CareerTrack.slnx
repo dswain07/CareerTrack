@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="CareerTrack.Data/CareerTrack.Data.csproj" />
+  <Project Path="CareerTrack.DbExport/CareerTrack.DbExport.csproj" Id="3cfc6d70-d8db-4473-90f1-fc629b989e7b" />
   <Project Path="CareerTrack/CareerTrack.csproj" />
 </Solution>
