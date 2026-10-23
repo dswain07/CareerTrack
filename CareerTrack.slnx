@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="CareerTrack.Data/CareerTrack.Data.csproj" />
+  <Project Path="CareerTrack/CareerTrack.csproj" />
+</Solution>
