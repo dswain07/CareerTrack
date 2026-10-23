@@ -1,66 +1,137 @@
+
 @model CareerTrack.Data.Models.JobApplication
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Job Application Details";
+
+    var statusName = Model.ApplicationStatus?.Name ?? "Unknown";
+
+    var statusClass = statusName switch
+    {
+        "Applied" => "text-bg-primary",
+        "Under Review" => "text-bg-info",
+        "Interview" => "text-bg-warning",
+        "Offer" => "text-bg-success",
+        "Rejected" => "text-bg-danger",
+        "Withdrawn" => "text-bg-secondary",
+        _ => "text-bg-secondary"
+    };
 }
 
-<h1>Details</h1>
+<!-- Page Header -->
+<div class="mb-4">
+    <h1 class="mb-1">Job Application Details</h1>
 
-<div>
-    <h4>JobApplication</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.JobTitle)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JobTitle)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateApplied)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateApplied)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Location)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.JobUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JobUrl)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Salary)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Salary)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Notes)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Notes)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Company)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Company.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ApplicationStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ApplicationStatus.Name)
-        </dd>
-    </dl>
+    <p class="text-body-secondary mb-0">
+        View the information associated with this job application.
+    </p>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<!-- Application Details Card -->
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header bg-body">
+        <h5 class="mb-0">@Model.JobTitle</h5>
+    </div>
+
+    <div class="card-body p-4">
+
+        <dl class="row mb-0">
+
+            <!-- Job Title -->
+            <dt class="col-sm-3 mb-3">Job Title</dt>
+            <dd class="col-sm-9 mb-3">
+                @Model.JobTitle
+            </dd>
+
+            <!-- Company -->
+            <dt class="col-sm-3 mb-3">Company</dt>
+            <dd class="col-sm-9 mb-3">
+                @(Model.Company?.Name ?? "—")
+            </dd>
+
+            <!-- Application Status -->
+            <dt class="col-sm-3 mb-3">Application Status</dt>
+            <dd class="col-sm-9 mb-3">
+                <span class="badge @statusClass">
+                    @statusName
+                </span>
+            </dd>
+
+            <!-- Date Applied -->
+            <dt class="col-sm-3 mb-3">Date Applied</dt>
+            <dd class="col-sm-9 mb-3">
+                @Model.DateApplied.ToString("MMMM dd, yyyy")
+            </dd>
+
+            <!-- Location -->
+            <dt class="col-sm-3 mb-3">Location</dt>
+            <dd class="col-sm-9 mb-3">
+                @(Model.Location ?? "—")
+            </dd>
+
+            <!-- Salary -->
+            <dt class="col-sm-3 mb-3">Salary</dt>
+            <dd class="col-sm-9 mb-3">
+                @if (Model.Salary.HasValue)
+                {
+                    @Model.Salary.Value.ToString("C0")
+                }
+                else
+                {
+                    <span class="text-body-secondary">—</span>
+                }
+            </dd>
+
+            <!-- Job URL -->
+            <dt class="col-sm-3 mb-3">Job URL</dt>
+            <dd class="col-sm-9 mb-3">
+                @if (!string.IsNullOrWhiteSpace(Model.JobUrl))
+                {
+                    <a href="@Model.JobUrl"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        View Job Posting
+                    </a>
+                }
+                else
+                {
+                    <span class="text-body-secondary">—</span>
+                }
+            </dd>
+
+            <!-- Notes -->
+            <dt class="col-sm-3 mb-3">Notes</dt>
+            <dd class="col-sm-9 mb-3">
+                @if (!string.IsNullOrWhiteSpace(Model.Notes))
+                {
+                    <span style="white-space: pre-wrap;">@Model.Notes</span>
+                }
+                else
+                {
+                    <span class="text-body-secondary">—</span>
+                }
+            </dd>
+
+        </dl>
+
+        <hr class="my-4" />
+
+        <!-- Action Buttons -->
+        <div class="d-flex flex-wrap gap-2">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-primary">
+                Edit Application
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+                Back to Applications
+            </a>
+
+        </div>
+
+    </div>
 </div>

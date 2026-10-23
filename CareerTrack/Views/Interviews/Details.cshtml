@@ -1,54 +1,120 @@
+
 @model CareerTrack.Data.Models.Interview
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Interview Details";
+
+    var outcome = Model.Outcome ?? "Unknown";
+
+    var outcomeClass = outcome switch
+    {
+        "Passed" => "text-bg-success",
+        "Pending" => "text-bg-warning",
+        "Failed" => "text-bg-danger",
+        "Cancelled" => "text-bg-secondary",
+        _ => "text-bg-secondary"
+    };
 }
 
-<h1>Details</h1>
+<!-- Page Header -->
+<div class="mb-4">
+    <h1 class="mb-1">Interview Details</h1>
 
-<div>
-    <h4>Interview</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.InterviewType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.InterviewType)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.InterviewDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.InterviewDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Location)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Outcome)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Outcome)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Notes)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Notes)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.JobApplication)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JobApplication.JobTitle)
-        </dd>
-    </dl>
+    <p class="text-body-secondary mb-0">
+        Review interview information, scheduling details,
+        and the recorded outcome.
+    </p>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<!-- Interview Details Card -->
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header bg-body">
+        <h5 class="mb-0">@Model.InterviewType</h5>
+    </div>
+
+    <div class="card-body p-4">
+
+        <dl class="row mb-0">
+
+            <!-- Interview Type -->
+            <dt class="col-sm-3 mb-3">Interview Type</dt>
+            <dd class="col-sm-9 mb-3">
+                @Model.InterviewType
+            </dd>
+
+            <!-- Interview Date -->
+            <dt class="col-sm-3 mb-3">Interview Date &amp; Time</dt>
+            <dd class="col-sm-9 mb-3">
+                @Model.InterviewDate.ToString("MMMM dd, yyyy 'at' h:mm tt")
+            </dd>
+
+            <!-- Job Application -->
+            <dt class="col-sm-3 mb-3">Job Application</dt>
+            <dd class="col-sm-9 mb-3">
+                @if (Model.JobApplication != null)
+                {
+                    <a asp-controller="JobApplications"
+                       asp-action="Details"
+                       asp-route-id="@Model.JobApplicationId"
+                       class="text-decoration-none">
+                        @Model.JobApplication.JobTitle
+                    </a>
+                }
+                else
+                {
+                    <span class="text-body-secondary">—</span>
+                }
+            </dd>
+
+            <!-- Location -->
+            <dt class="col-sm-3 mb-3">Location</dt>
+            <dd class="col-sm-9 mb-3">
+                @(string.IsNullOrWhiteSpace(Model.Location)
+                    ? "—"
+                    : Model.Location)
+            </dd>
+
+            <!-- Outcome -->
+            <dt class="col-sm-3 mb-3">Outcome</dt>
+            <dd class="col-sm-9 mb-3">
+                <span class="badge @outcomeClass">
+                    @outcome
+                </span>
+            </dd>
+
+            <!-- Notes -->
+            <dt class="col-sm-3 mb-3">Notes</dt>
+            <dd class="col-sm-9 mb-3">
+                @if (!string.IsNullOrWhiteSpace(Model.Notes))
+                {
+                    <span style="white-space: pre-wrap;">@Model.Notes</span>
+                }
+                else
+                {
+                    <span class="text-body-secondary">—</span>
+                }
+            </dd>
+
+        </dl>
+
+        <hr class="my-4" />
+
+        <!-- Action Buttons -->
+        <div class="d-flex flex-wrap gap-2">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-primary">
+                Edit Interview
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+                Back to Interviews
+            </a>
+
+        </div>
+
+    </div>
 </div>

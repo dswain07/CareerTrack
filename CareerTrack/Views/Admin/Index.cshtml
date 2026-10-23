@@ -1,70 +1,173 @@
-﻿
-@model IEnumerable<CareerTrack.Data.Models.ApplicationStatus>
+﻿@model IEnumerable<CareerTrack.Data.Models.ApplicationStatus>
 
 @{
     ViewData["Title"] = "Administration";
 }
 
-<h1>Administration</h1>
+<!-- Page Header -->
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success" role="alert">
-        @TempData["SuccessMessage"]
+    <div>
+        <h1 class="mb-1">Administration</h1>
+
+        <p class="text-body-secondary mb-0">
+            Manage application statuses used throughout CareerTrack.
+        </p>
     </div>
-}
 
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @TempData["ErrorMessage"]
-    </div>
-}
-
-<p class="text-muted">
-    Manage application statuses used throughout CareerTrack.
-</p>
-
-<h2>Application Statuses</h2>
-
-<p>
     <a asp-controller="Admin"
        asp-action="Create"
        class="btn btn-primary">
-        Create New Status
+        + Create New Status
     </a>
-</p>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Status Name</th>
-            <th>Description</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var status in Model)
+</div>
+
+<!-- Success Message -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show"
+         role="alert">
+
+        @TempData["SuccessMessage"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close">
+        </button>
+    </div>
+}
+
+<!-- Error Message -->
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show"
+         role="alert">
+
+        @TempData["ErrorMessage"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close">
+        </button>
+    </div>
+}
+
+<!-- Application Statuses Table -->
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <h5 class="card-title mb-0">
+                Application Statuses
+            </h5>
+
+            <span class="badge text-bg-secondary">
+                @Model.Count() Statuses
+            </span>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead>
+                    <tr>
+                        <th>Status Name</th>
+                        <th>Description</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var status in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                @{
+                                    var statusClass = status.Name switch
+                                    {
+                                        "Applied" => "text-bg-primary",
+                                        "Under Review" => "text-bg-info",
+                                        "Interview" => "text-bg-warning",
+                                        "Offer" => "text-bg-success",
+                                        "Rejected" => "text-bg-danger",
+                                        "Withdrawn" => "text-bg-secondary",
+                                        _ => "text-bg-secondary"
+                                    };
+                                }
+
+                                <span class="badge @statusClass">
+                                    @status.Name
+                                </span>
+                            </td>
+
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(status.Description))
+                                {
+                                    @status.Description
+                                }
+                                else
+                                {
+                                    <span class="text-body-secondary">—</span>
+                                }
+                            </td>
+
+                            <td class="text-end">
+
+                                <div class="d-inline-flex gap-1">
+
+                                    <a asp-controller="Admin"
+                                       asp-action="Edit"
+                                       asp-route-id="@status.Id"
+                                       class="btn btn-sm btn-outline-primary">
+                                        Edit
+                                    </a>
+
+                                    <a asp-controller="Admin"
+                                       asp-action="Delete"
+                                       asp-route-id="@status.Id"
+                                       class="btn btn-sm btn-outline-danger">
+                                        Delete
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        @if (!Model.Any())
         {
-            <tr>
-                <td>@status.Name</td>
-                <td>@status.Description</td>
-                <td>
-                    <a asp-controller="Admin"
-                       asp-action="Edit"
-                       asp-route-id="@status.Id"
-                       class="btn btn-sm btn-warning">
-                        Edit
-                    </a>
+            <div class="text-center py-4">
 
-                    <a asp-controller="Admin"
-                       asp-action="Delete"
-                       asp-route-id="@status.Id"
-                       class="btn btn-sm btn-danger">
-                        Delete
-                    </a>
-                </td>
-            </tr>
+                <p class="text-body-secondary mb-0">
+                    No application statuses found.
+                </p>
+
+                <a asp-controller="Admin"
+                   asp-action="Create"
+                   class="btn btn-primary mt-3">
+                    Create Your First Status
+                </a>
+
+            </div>
         }
-    </tbody>
-</table>
+
+    </div>
+
+</div>

@@ -1,59 +1,126 @@
-﻿@{
+﻿
+@{
     ViewData["Title"] = "Settings";
 }
 
-<h1>Settings</h1>
+<!-- Page Header -->
+<div class="mb-4">
+    <h1 class="mb-1">Settings</h1>
 
-<p class="text-body-secondary">
-    Customize your CareerTrack experience.
-</p>
+    <p class="text-body-secondary mb-0">
+        Customize your CareerTrack experience and application preferences.
+    </p>
+</div>
 
-<h2>Appearance</h2>
+<!-- Appearance Settings -->
+<div class="card shadow-sm mb-4">
 
-<div class="card mb-4">
+    <div class="card-header bg-body">
+        <h5 class="mb-0">Appearance</h5>
+    </div>
+
     <div class="card-body">
 
-        <h5 class="card-title">Application Theme</h5>
+        <div class="row">
 
-        <p class="card-text">
-            Select your preferred appearance.
-            Changes are applied immediately and saved automatically.
-        </p>
+            <div class="col-md-7">
 
-        <div class="mb-3">
-            <label for="themeSelect" class="form-label">
-                Choose Theme
-            </label>
+                <h6 class="fw-semibold mb-2">
+                    Application Theme
+                </h6>
 
-            <select id="themeSelect" class="form-select">
-                <option value="light">Light Theme</option>
-                <option value="dark">Dark Theme</option>
-            </select>
+                <p class="text-body-secondary">
+                    Choose your preferred appearance.
+                    Theme changes are applied immediately
+                    and saved automatically.
+                </p>
+
+                <div class="mb-3">
+                    <label for="themeSelect"
+                           class="form-label fw-semibold">
+                        Choose Theme
+                    </label>
+
+                    <select id="themeSelect"
+                            class="form-select">
+                        <option value="light">
+                            Light Theme
+                        </option>
+
+                        <option value="dark">
+                            Dark Theme
+                        </option>
+                    </select>
+                </div>
+
+                <p class="text-body-secondary small mb-0">
+                    Your theme preference is saved in this browser
+                    and will remain active when you return to CareerTrack.
+                </p>
+
+            </div>
+
         </div>
 
     </div>
+
+</div>
+
+<!-- Application Information -->
+<div class="card shadow-sm">
+
+    <div class="card-header bg-body">
+        <h5 class="mb-0">About CareerTrack</h5>
+    </div>
+
+    <div class="card-body">
+
+        <p class="mb-2">
+            <strong>Application:</strong> CareerTrack
+        </p>
+
+        <p class="mb-2">
+            <strong>Framework:</strong> ASP.NET Core MVC (.NET 10)
+        </p>
+
+        <p class="mb-2">
+            <strong>Database:</strong> SQLite with Entity Framework Core
+        </p>
+
+        <p class="mb-0">
+            <strong>Purpose:</strong>
+            Manage companies, track job applications,
+            organize interviews, and monitor job search progress.
+        </p>
+
+    </div>
+
 </div>
 
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function () {
 
-            const themeSelect = document.getElementById("themeSelect");
+            const themeSelect =
+                document.getElementById("themeSelect");
 
             const savedTheme =
                 localStorage.getItem("careertrack-theme") || "light";
 
-            themeSelect.value = savedTheme;
+            themeSelect.value =
+                savedTheme === "dark" ? "dark" : "light";
 
             themeSelect.addEventListener("change", function () {
 
                 const selectedTheme = themeSelect.value;
 
+                // Apply the theme immediately
                 document.documentElement.setAttribute(
                     "data-bs-theme",
                     selectedTheme
                 );
 
+                // Save the preference
                 localStorage.setItem(
                     "careertrack-theme",
                     selectedTheme

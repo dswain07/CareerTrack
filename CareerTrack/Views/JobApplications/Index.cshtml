@@ -1,115 +1,234 @@
+
 @model IEnumerable<CareerTrack.Data.Models.JobApplication>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Job Applications";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-
-<form asp-action="Index" method="get" class="row g-3 mb-4" id="searchForm">
-
-    <div class="col-md-4">
-        <label for="jobTitle" class="form-label">Job Title</label>
-        <input type="text"
-               id="jobTitle"
-               name="jobTitle"
-               value="@ViewData["JobTitleSearch"]"
-               class="form-control"
-               placeholder="Search by job title" />
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-1">Job Applications</h1>
+        <p class="text-body-secondary mb-0">
+            Track and manage your job applications.
+        </p>
     </div>
 
-    <div class="col-md-4">
-        <label for="location" class="form-label">Location</label>
-        <input type="text"
-               id="location"
-               name="location"
-               value="@ViewData["LocationSearch"]"
-               class="form-control"
-               placeholder="Search by location" />
+    <a asp-action="Create" class="btn btn-primary">
+        + Add Application
+    </a>
+</div>
+
+<!-- Search Section -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+
+        <h5 class="card-title mb-3">Search Applications</h5>
+
+        <form asp-action="Index"
+              method="get"
+              class="row g-3"
+              id="searchForm">
+
+            <div class="col-md-4">
+                <label for="jobTitle" class="form-label">
+                    Job Title
+                </label>
+
+                <input type="text"
+                       id="jobTitle"
+                       name="jobTitle"
+                       value="@ViewData["JobTitleSearch"]"
+                       class="form-control"
+                       placeholder="Search by job title" />
+            </div>
+
+            <div class="col-md-4">
+                <label for="location" class="form-label">
+                    Location
+                </label>
+
+                <input type="text"
+                       id="location"
+                       name="location"
+                       value="@ViewData["LocationSearch"]"
+                       class="form-control"
+                       placeholder="Search by location" />
+            </div>
+
+            <div class="col-md-4 d-flex align-items-end gap-2">
+                <button type="submit" class="btn btn-primary">
+                    Search
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Clear
+                </a>
+            </div>
+
+        </form>
     </div>
+</div>
 
-    <div class="col-md-4 d-flex align-items-end gap-2">
-        <button type="submit" class="btn btn-primary">
-            Search
-        </button>
+<!-- Applications Table -->
+<div class="card shadow-sm">
+    <div class="card-body">
 
-        <a asp-action="Index" class="btn btn-secondary">
-            Clear
-        </a>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title mb-0">Application Records</h5>
+
+            <span class="badge text-bg-secondary">
+                @Model.Count() Applications
+            </span>
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Date Applied</th>
+                        <th>Location</th>
+                        <th>Job URL</th>
+                        <th>Salary</th>
+                        <th>Notes</th>
+                        <th>Company</th>
+                        <th>Application Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td class="fw-semibold">
+                                @item.JobTitle
+                            </td>
+
+                            <td>
+                                @item.DateApplied.ToString("MMM dd, yyyy")
+                            </td>
+
+                            <td>
+                                @(item.Location ?? "—")
+                            </td>
+
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(item.JobUrl))
+                                {
+                                    <a href="@item.JobUrl"
+                                       target="_blank"
+                                       rel="noopener noreferrer">
+                                        View Job
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-body-secondary">—</span>
+                                }
+                            </td>
+
+                            <td>
+                                @if (item.Salary.HasValue)
+                                {
+                                    @item.Salary.Value.ToString("C0")
+                                }
+                                else
+                                {
+                                    <span class="text-body-secondary">—</span>
+                                }
+                            </td>
+
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(item.Notes))
+                                {
+                                    <span class="d-inline-block text-truncate"
+                                          style="max-width: 180px;"
+                                          title="@item.Notes">
+                                        @item.Notes
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-body-secondary">—</span>
+                                }
+                            </td>
+
+                            <td>
+                                @(item.Company?.Name ?? "—")
+                            </td>
+
+                            <td>
+                                @{
+                                    var statusName =
+                                        item.ApplicationStatus?.Name ?? "Unknown";
+
+                                    var statusClass = statusName switch
+                                    {
+                                        "Applied" => "text-bg-primary",
+                                        "Under Review" => "text-bg-info",
+                                        "Interview" => "text-bg-warning",
+                                        "Offer" => "text-bg-success",
+                                        "Rejected" => "text-bg-danger",
+                                        "Withdrawn" => "text-bg-secondary",
+                                        _ => "text-bg-secondary"
+                                    };
+                                }
+
+                                <span class="badge @statusClass">
+                                    @statusName
+                                </span>
+                            </td>
+
+                            <td class="text-end">
+                                <div class="d-inline-flex gap-1">
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-primary">
+                                        Edit
+                                    </a>
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-secondary">
+                                        Details
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-danger">
+                                        Delete
+                                    </a>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-4">
+                <p class="text-body-secondary mb-0">
+                    No job applications found.
+                </p>
+            </div>
+        }
+
     </div>
-
-</form>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.JobTitle)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateApplied)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.JobUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Salary)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Notes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Company)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ApplicationStatus)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.JobTitle)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateApplied)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Location)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JobUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Salary)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Notes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Company.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApplicationStatus.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+</div>
 
 @section Scripts {
     <script>
@@ -122,8 +241,11 @@
             let searchTimeout;
 
             // Restore focus after page reload
-            const lastFocusedField = sessionStorage.getItem("lastFocusedField");
-            const cursorPosition = sessionStorage.getItem("cursorPosition");
+            const lastFocusedField =
+                sessionStorage.getItem("lastFocusedField");
+
+            const cursorPosition =
+                sessionStorage.getItem("cursorPosition");
 
             if (lastFocusedField) {
                 const input = document.getElementById(lastFocusedField);
@@ -151,8 +273,15 @@
                 searchTimeout = setTimeout(function () {
 
                     // Remember textbox and cursor position
-                    sessionStorage.setItem("lastFocusedField", input.id);
-                    sessionStorage.setItem("cursorPosition", input.selectionStart);
+                    sessionStorage.setItem(
+                        "lastFocusedField",
+                        input.id
+                    );
+
+                    sessionStorage.setItem(
+                        "cursorPosition",
+                        input.selectionStart
+                    );
 
                     searchForm.requestSubmit();
 

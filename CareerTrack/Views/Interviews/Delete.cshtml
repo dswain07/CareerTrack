@@ -1,57 +1,123 @@
+
 @model CareerTrack.Data.Models.Interview
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete Interview";
 }
 
-<h1>Delete</h1>
+<!-- Page Header -->
+<div class="mb-4">
+    <h1 class="mb-1">Delete Interview</h1>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Interview</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.InterviewType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.InterviewType)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.InterviewDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.InterviewDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Location)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Outcome)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Outcome)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Notes)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Notes)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.JobApplication)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JobApplication.JobTitle)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+    <p class="text-body-secondary mb-0">
+        Review the interview details before confirming deletion.
+    </p>
+</div>
+
+<!-- Deletion Warning -->
+<div class="alert alert-danger" role="alert">
+    <h5 class="alert-heading">Confirm Deletion</h5>
+
+    <p class="mb-0">
+        Are you sure you want to permanently delete this interview?
+        This action cannot be undone.
+    </p>
+</div>
+
+<!-- Interview Details -->
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header bg-body">
+        <h5 class="mb-0">@Model.InterviewType</h5>
+    </div>
+
+    <div class="card-body p-4">
+
+        <dl class="row mb-0">
+
+            <!-- Interview Type -->
+            <dt class="col-sm-3 mb-3">Interview Type</dt>
+            <dd class="col-sm-9 mb-3">
+                @Model.InterviewType
+            </dd>
+
+            <!-- Interview Date -->
+            <dt class="col-sm-3 mb-3">Interview Date &amp; Time</dt>
+            <dd class="col-sm-9 mb-3">
+                @Model.InterviewDate.ToString("MMMM dd, yyyy 'at' h:mm tt")
+            </dd>
+
+            <!-- Job Application -->
+            <dt class="col-sm-3 mb-3">Job Application</dt>
+            <dd class="col-sm-9 mb-3">
+                @(Model.JobApplication?.JobTitle ?? "—")
+            </dd>
+
+            <!-- Location -->
+            <dt class="col-sm-3 mb-3">Location</dt>
+            <dd class="col-sm-9 mb-3">
+                @(string.IsNullOrWhiteSpace(Model.Location)
+                    ? "—"
+                    : Model.Location)
+            </dd>
+
+            <!-- Outcome -->
+            <dt class="col-sm-3 mb-3">Outcome</dt>
+            <dd class="col-sm-9 mb-3">
+                @{
+                    var outcome = Model.Outcome ?? "Unknown";
+
+                    var outcomeClass = outcome switch
+                    {
+                        "Passed" => "text-bg-success",
+                        "Pending" => "text-bg-warning",
+                        "Failed" => "text-bg-danger",
+                        "Cancelled" => "text-bg-secondary",
+                        _ => "text-bg-secondary"
+                    };
+                }
+
+                <span class="badge @outcomeClass">
+                    @outcome
+                </span>
+            </dd>
+
+            <!-- Notes -->
+            <dt class="col-sm-3 mb-3">Notes</dt>
+            <dd class="col-sm-9 mb-3">
+                @if (!string.IsNullOrWhiteSpace(Model.Notes))
+                {
+                    <span style="white-space: pre-wrap;">@Model.Notes</span>
+                }
+                else
+                {
+                    <span class="text-body-secondary">—</span>
+                }
+            </dd>
+
+        </dl>
+
+        <hr class="my-4" />
+
+        <!-- Delete Confirmation Form -->
+        <form asp-action="Delete" method="post">
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="d-flex flex-wrap gap-2">
+
+                <button type="submit" class="btn btn-danger">
+                    Delete Interview
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
 </div>

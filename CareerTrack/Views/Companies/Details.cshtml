@@ -1,42 +1,106 @@
+
 @model CareerTrack.Data.Models.Company
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Company Details";
 }
 
-<h1>Details</h1>
+<!-- Page Header -->
+<div class="mb-4">
+    <h1 class="mb-1">Company Details</h1>
 
-<div>
-    <h4>Company</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Industry)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Industry)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Location)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Website)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Website)
-        </dd>
-    </dl>
+    <p class="text-body-secondary mb-0">
+        View company information and manage its details.
+    </p>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<!-- Company Details Card -->
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header bg-body">
+        <h5 class="mb-0">@Model.Name</h5>
+    </div>
+
+    <div class="card-body p-4">
+
+        <dl class="row mb-0">
+
+            <!-- Company Name -->
+            <dt class="col-sm-3 mb-3">
+                Company Name
+            </dt>
+            <dd class="col-sm-9 mb-3">
+                @Model.Name
+            </dd>
+
+            <!-- Industry -->
+            <dt class="col-sm-3 mb-3">
+                Industry
+            </dt>
+            <dd class="col-sm-9 mb-3">
+                @if (!string.IsNullOrWhiteSpace(Model.Industry))
+                {
+                    @Model.Industry
+                }
+                else
+                {
+                    <span class="text-body-secondary">—</span>
+                }
+            </dd>
+
+            <!-- Location -->
+            <dt class="col-sm-3 mb-3">
+                Location
+            </dt>
+            <dd class="col-sm-9 mb-3">
+                @if (!string.IsNullOrWhiteSpace(Model.Location))
+                {
+                    @Model.Location
+                }
+                else
+                {
+                    <span class="text-body-secondary">—</span>
+                }
+            </dd>
+
+            <!-- Website -->
+            <dt class="col-sm-3 mb-3">
+                Website
+            </dt>
+            <dd class="col-sm-9 mb-3">
+                @if (!string.IsNullOrWhiteSpace(Model.Website))
+                {
+                    <a href="@Model.Website"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        Visit Company Website
+                    </a>
+                }
+                else
+                {
+                    <span class="text-body-secondary">—</span>
+                }
+            </dd>
+
+        </dl>
+
+        <hr class="my-4" />
+
+        <!-- Action Buttons -->
+        <div class="d-flex flex-wrap gap-2">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-primary">
+                Edit Company
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+                Back to Companies
+            </a>
+
+        </div>
+
+    </div>
 </div>

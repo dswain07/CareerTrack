@@ -1,48 +1,114 @@
+
 @model CareerTrack.Data.Models.Company
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add Company";
 }
 
-<h1>Create</h1>
+<!-- Page Header -->
+<div class="mb-4">
+    <h1 class="mb-1">Add Company</h1>
 
-<h4>Company</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+    <p class="text-body-secondary mb-0">
+        Add a company to CareerTrack to organize
+        your job applications and professional contacts.
+    </p>
+</div>
+
+<!-- Company Form -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body p-4">
+
+        <form asp-action="Create" method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3"></div>
+
+            <h5 class="mb-3">Company Information</h5>
+
+            <div class="row g-3">
+
+                <!-- Company Name -->
+                <div class="col-md-6">
+                    <label asp-for="Name" class="form-label">
+                        Company Name
+                    </label>
+
+                    <input asp-for="Name"
+                           class="form-control"
+                           placeholder="e.g., Microsoft" />
+
+                    <span asp-validation-for="Name"
+                          class="text-danger"></span>
+                </div>
+
+                <!-- Industry -->
+                <div class="col-md-6">
+                    <label asp-for="Industry" class="form-label">
+                        Industry
+                    </label>
+
+                    <input asp-for="Industry"
+                           class="form-control"
+                           placeholder="e.g., Technology" />
+
+                    <span asp-validation-for="Industry"
+                          class="text-danger"></span>
+                </div>
+
+                <!-- Location -->
+                <div class="col-md-6">
+                    <label asp-for="Location" class="form-label">
+                        Location
+                    </label>
+
+                    <input asp-for="Location"
+                           class="form-control"
+                           placeholder="e.g., Redmond, WA" />
+
+                    <span asp-validation-for="Location"
+                          class="text-danger"></span>
+                </div>
+
+                <!-- Website -->
+                <div class="col-md-6">
+                    <label asp-for="Website" class="form-label">
+                        Website
+                    </label>
+
+                    <input asp-for="Website"
+                           type="url"
+                           class="form-control"
+                           placeholder="https://www.example.com" />
+
+                    <span asp-validation-for="Website"
+                          class="text-danger"></span>
+                </div>
+
             </div>
-            <div class="form-group">
-                <label asp-for="Industry" class="control-label"></label>
-                <input asp-for="Industry" class="form-control" />
-                <span asp-validation-for="Industry" class="text-danger"></span>
+
+            <hr class="my-4" />
+
+            <!-- Form Actions -->
+            <div class="d-flex flex-wrap gap-2">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Add Company
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+
             </div>
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Website" class="control-label"></label>
-                <input asp-for="Website" class="form-control" />
-                <span asp-validation-for="Website" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+
         </form>
+
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_ValidationScriptsPartial" />
 }

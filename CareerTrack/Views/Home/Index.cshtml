@@ -1,8 +1,226 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿
+@model CareerTrack.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Dashboard Header -->
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="mb-1">CareerTrack Dashboard</h1>
+        <p class="text-body-secondary mb-0">
+            Welcome to CareerTrack! Track your applications,
+            manage interviews, and monitor your job search progress.
+        </p>
+    </div>
+
+    <a asp-controller="JobApplications"
+       asp-action="Create"
+       class="btn btn-primary">
+        + New Application
+    </a>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row g-3 mb-4">
+
+    <!-- Companies -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="text-body-secondary">
+                    Total Companies
+                </h6>
+
+                <h2 class="fw-bold mb-0">
+                    @Model.TotalCompanies
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applications -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="text-body-secondary">
+                    Job Applications
+                </h6>
+
+                <h2 class="fw-bold mb-0">
+                    @Model.TotalApplications
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interviews -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="text-body-secondary">
+                    Total Interviews
+                </h6>
+
+                <h2 class="fw-bold mb-0">
+                    @Model.TotalInterviews
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offers -->
+    <div class="col-md-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h6 class="text-body-secondary">
+                    Job Offers
+                </h6>
+
+                <h2 class="fw-bold text-success mb-0">
+                    @Model.TotalOffers
+                </h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Recent Applications -->
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header bg-body d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Recent Applications</h5>
+
+        <a asp-controller="JobApplications"
+           asp-action="Index"
+           class="btn btn-sm btn-outline-primary">
+            View All
+        </a>
+    </div>
+
+    <div class="card-body">
+
+        @if (Model.RecentApplications.Any())
+        {
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Company</th>
+                            <th>Date Applied</th>
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var application in Model.RecentApplications)
+                        {
+                            <tr>
+                                <td class="fw-semibold">
+                                    @application.JobTitle
+                                </td>
+
+                                <td>
+                                    @(application.Company?.Name ?? "—")
+                                </td>
+
+                                <td>
+                                    @application.DateApplied.ToString("MMM dd, yyyy")
+                                </td>
+
+                                <td>
+                                    @{
+                                        var statusName =
+                                            application.ApplicationStatus?.Name ?? "Unknown";
+
+                                        var statusClass = statusName switch
+                                        {
+                                            "Applied" => "text-bg-primary",
+                                            "Under Review" => "text-bg-info",
+                                            "Interview" => "text-bg-warning",
+                                            "Offer" => "text-bg-success",
+                                            "Rejected" => "text-bg-danger",
+                                            "Withdrawn" => "text-bg-secondary",
+                                            _ => "text-bg-secondary"
+                                        };
+                                    }
+
+                                    <span class="badge @statusClass">
+                                        @statusName
+                                    </span>
+                                </td>
+
+                                <td class="text-end">
+                                    <a asp-controller="JobApplications"
+                                       asp-action="Details"
+                                       asp-route-id="@application.Id"
+                                       class="btn btn-sm btn-outline-secondary">
+                                        View Details
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-4">
+                <p class="text-body-secondary">
+                    No job applications have been added yet.
+                </p>
+
+                <a asp-controller="JobApplications"
+                   asp-action="Create"
+                   class="btn btn-primary">
+                    Add Your First Application
+                </a>
+            </div>
+        }
+
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+
+        <h5 class="card-title mb-3">Quick Actions</h5>
+
+        <div class="d-flex flex-wrap gap-2">
+
+            <a asp-controller="JobApplications"
+               asp-action="Create"
+               class="btn btn-primary">
+                + Add Job Application
+            </a>
+
+            <a asp-controller="Interviews"
+               asp-action="Create"
+               class="btn btn-outline-primary">
+                + Schedule Interview
+            </a>
+
+            <a asp-controller="Companies"
+               asp-action="Create"
+               class="btn btn-outline-secondary">
+                + Add Company
+            </a>
+
+            <a asp-controller="Admin"
+               asp-action="Index"
+               class="btn btn-outline-secondary">
+                Manage Statuses
+            </a>
+
+        </div>
+
+    </div>
 </div>

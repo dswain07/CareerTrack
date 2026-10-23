@@ -1,59 +1,151 @@
+
 @model CareerTrack.Data.Models.Interview
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Interview";
 }
 
-<h1>Edit</h1>
+<!-- Page Header -->
+<div class="mb-4">
+    <h1 class="mb-1">Edit Interview</h1>
 
-<h4>Interview</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <p class="text-body-secondary mb-0">
+        Update interview details, scheduling information,
+        and interview outcomes.
+    </p>
+</div>
+
+<!-- Edit Interview Form -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body p-4">
+
+        <form asp-action="Edit" method="post">
+
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="InterviewType" class="control-label"></label>
-                <input asp-for="InterviewType" class="form-control" />
-                <span asp-validation-for="InterviewType" class="text-danger"></span>
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3"></div>
+
+            <h5 class="mb-3">Interview Information</h5>
+
+            <div class="row g-3">
+
+                <!-- Interview Type -->
+                <div class="col-md-6">
+                    <label asp-for="InterviewType"
+                           class="form-label">
+                        Interview Type
+                    </label>
+
+                    <input asp-for="InterviewType"
+                           class="form-control"
+                           placeholder="e.g., Technical Interview" />
+
+                    <span asp-validation-for="InterviewType"
+                          class="text-danger"></span>
+                </div>
+
+                <!-- Interview Date -->
+                <div class="col-md-6">
+                    <label asp-for="InterviewDate"
+                           class="form-label">
+                        Interview Date &amp; Time
+                    </label>
+
+                    <input asp-for="InterviewDate"
+                           type="datetime-local"
+                           class="form-control" />
+
+                    <span asp-validation-for="InterviewDate"
+                          class="text-danger"></span>
+                </div>
+
+                <!-- Job Application -->
+                <div class="col-md-6">
+                    <label asp-for="JobApplicationId"
+                           class="form-label">
+                        Job Application
+                    </label>
+
+                    <select asp-for="JobApplicationId"
+                            class="form-select"
+                            asp-items="ViewBag.JobApplicationId">
+                    </select>
+
+                    <span asp-validation-for="JobApplicationId"
+                          class="text-danger"></span>
+                </div>
+
+                <!-- Location -->
+                <div class="col-md-6">
+                    <label asp-for="Location"
+                           class="form-label">
+                        Location
+                    </label>
+
+                    <input asp-for="Location"
+                           class="form-control"
+                           placeholder="e.g., Online / Office Address" />
+
+                    <span asp-validation-for="Location"
+                          class="text-danger"></span>
+                </div>
+
+                <!-- Outcome -->
+                <div class="col-md-6">
+                    <label asp-for="Outcome"
+                           class="form-label">
+                        Outcome
+                    </label>
+
+                    <input asp-for="Outcome"
+                           class="form-control"
+                           placeholder="e.g., Pending, Passed, Failed" />
+
+                    <span asp-validation-for="Outcome"
+                          class="text-danger"></span>
+                </div>
+
+                <!-- Notes -->
+                <div class="col-12">
+                    <label asp-for="Notes"
+                           class="form-label">
+                        Notes
+                    </label>
+
+                    <textarea asp-for="Notes"
+                              class="form-control"
+                              rows="4"
+                              placeholder="Update preparation notes, interview questions, or feedback..."></textarea>
+
+                    <span asp-validation-for="Notes"
+                          class="text-danger"></span>
+                </div>
+
             </div>
-            <div class="form-group">
-                <label asp-for="InterviewDate" class="control-label"></label>
-                <input asp-for="InterviewDate" class="form-control" />
-                <span asp-validation-for="InterviewDate" class="text-danger"></span>
+
+            <hr class="my-4" />
+
+            <!-- Form Actions -->
+            <div class="d-flex flex-wrap gap-2">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Save Changes
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+
             </div>
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Outcome" class="control-label"></label>
-                <input asp-for="Outcome" class="form-control" />
-                <span asp-validation-for="Outcome" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Notes" class="control-label"></label>
-                <input asp-for="Notes" class="form-control" />
-                <span asp-validation-for="Notes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="JobApplicationId" class="control-label"></label>
-                <select asp-for="JobApplicationId" class="form-control" asp-items="ViewBag.JobApplicationId"></select>
-                <span asp-validation-for="JobApplicationId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+
         </form>
+
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_ValidationScriptsPartial" />
 }
